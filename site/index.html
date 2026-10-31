@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>구조해석 도구 사업화</title>
+<meta name="description" content="한국·일본·중국 중소 조선업체 대상 구조해석 자료관리·작업 플랫폼 사업화 검토">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root {
+  --bg: #f6f7f9; --panel: #ffffff; --ink: #18202b; --muted: #5b6675; --line: #dfe3e9;
+  --accent: #173f6f; --accent-soft: #e6edf6; --warn: #8a4b08; --warn-soft: #fcf0df;
+  --ok: #18623f; --ok-soft: #e3f3ea; --hyp: #5c3d8f; --hyp-soft: #eee8f8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161d; --panel: #18202a; --ink: #e8ecf1; --muted: #a0abb9; --line: #2e3947;
+    --accent: #9cc0ec; --accent-soft: #20324a; --warn: #f0bf80; --warn-soft: #3b2c18;
+    --ok: #8ad6ad; --ok-soft: #173427; --hyp: #c7b3ee; --hyp-soft: #2d2540;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161d; --panel: #18202a; --ink: #e8ecf1; --muted: #a0abb9; --line: #2e3947;
+  --accent: #9cc0ec; --accent-soft: #20324a; --warn: #f0bf80; --warn-soft: #3b2c18;
+  --ok: #8ad6ad; --ok-soft: #173427; --hyp: #c7b3ee; --hyp-soft: #2d2540;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.7 "Pretendard Variable", Pretendard, "Malgun Gothic", system-ui, sans-serif;
+  word-break: keep-all; overflow-wrap: anywhere;
+}
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+header { padding: 56px 0 32px; }
+.eyebrow { color: var(--muted); font-size: 14px; margin: 0 0 8px; }
+h1 { font-size: clamp(30px, 6vw, 44px); line-height: 1.25; letter-spacing: -0.02em; margin: 0 0 16px; }
+.lead { font-size: 19px; margin: 0; max-width: 760px; }
+nav { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 12px 0; border-block: 1px solid var(--line); font-size: 14px; }
+nav a { color: var(--muted); text-decoration: none; }
+nav a:hover { color: var(--accent); }
+section { padding: 36px 0 8px; }
+h2 { font-size: 25px; letter-spacing: -0.01em; line-height: 1.35; margin: 0 0 8px; }
+h3 { font-size: 18px; margin: 26px 0 6px; }
+p { margin: 8px 0; }
+.note { color: var(--muted); font-size: 14px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 18px 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+.card .k { color: var(--muted); font-size: 14px; }
+.card .v { font-size: 24px; font-weight: 700; line-height: 1.3; margin: 2px 0; }
+.card .s { font-size: 14px; color: var(--muted); }
+.table { overflow-x: auto; margin: 14px 0; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 15px; line-height: 1.5; overflow-wrap: normal; }
+th, td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+th { background: var(--accent-soft); font-weight: 600; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.n { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tag { display: inline-block; padding: 1px 7px; border-radius: 4px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.t-fact { color: var(--ok); background: var(--ok-soft); }
+.t-hyp { color: var(--hyp); background: var(--hyp-soft); }
+.t-weak { color: var(--warn); background: var(--warn-soft); }
+.callout { background: var(--warn-soft); color: var(--ink); border-left: 4px solid var(--warn); border-radius: 4px; padding: 12px 16px; margin: 16px 0; }
+ol, ul { padding-left: 22px; margin: 8px 0; }
+li { margin: 5px 0; }
+.src { font-size: 14px; }
+.src a { color: var(--accent); }
+footer { padding: 36px 0 56px; color: var(--muted); font-size: 14px; }
+@media (max-width: 640px) {
+  header { padding-top: 36px; }
+  .lead { font-size: 17px; }
+}
+@media print {
+  nav { display: none; }
+  body { background: #fff; }
+  .table { overflow: visible; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <p class="eyebrow">사업화 검토 초안 · 2026-10-31</p>
+  <h1>조선 구조해석 도구 사업화</h1>
+  <p class="lead">사내에서 쓰는 구조해석 도구를 중소 조선업체용 설치형 상품으로 만드는 방안입니다. <strong>한국 팀 단위 판매로 시작해 일본으로 넓히고, 중국은 현지 파트너를 찾을 때까지 보류</strong>하는 것을 제안합니다.</p>
+</header>
+
+<nav aria-label="목차">
+  <a href="#summary">요약</a><a href="#product">상품</a><a href="#market-price">시세</a><a href="#pricing">가격안</a><a href="#countries">3개국</a><a href="#cad">3D CAD</a><a href="#revenue">매출</a><a href="#plan">90일 계획</a><a href="#risk">위험</a><a href="#sources">출처</a>
+</nav>
+
+<main>
+<section id="summary">
+  <h2>요약</h2>
+  <div class="cards">
+    <div class="card"><div class="k">한국 팀 패키지 가설</div><div class="v">연 1,950만 원</div><div class="s">LogBook 5명 + WorkBench 3석</div></div>
+    <div class="card"><div class="k">일본 팀 패키지 가설</div><div class="v">연 215만 엔</div><div class="s">약 2,000만 원</div></div>
+    <div class="card"><div class="k">중국 팀 패키지 가설</div><div class="v">연 4.45만 위안</div><div class="s">약 870만 원, 파트너 전제</div></div>
+    <div class="card"><div class="k">기준 시세</div><div class="v">1석 약 1,500만 원</div><div class="s">Femap + Nastran 1년 구독</div></div>
+  </div>
+  <ul>
+    <li><strong>가격은 감당 가능한 수준입니다.</strong> 기존 해석 소프트웨어 1석 값으로 팀 전체가 쓰는 구조를 제안할 수 있습니다.</li>
+    <li><strong>핵심 불확실성은 가격보다 구매자입니다.</strong> 중소 조선소에 Nastran 해석 팀이 실제로 얼마나 있는지, 외주 비중이 얼마인지 아직 모릅니다.</li>
+    <li><strong>판매 방식은 설치형 연 구독을 제안합니다.</strong> 설계 데이터를 외부 웹에 올리기 꺼릴 가능성이 높아, 고객사 안에 설치하는 방식이 맞습니다.</li>
+    <li><strong>다음 관문은 유료 파일럿 1곳입니다.</strong> 90일 안에 얻지 못하면 사업 범위를 다시 검토합니다.</li>
+  </ul>
+  <p class="note"><span class="tag t-fact">확인</span> 판매처·공식 자료에서 확인 &nbsp; <span class="tag t-weak">참고</span> 2차 자료, 낮은 신뢰도 &nbsp; <span class="tag t-hyp">가설</span> 이 문서의 제안 값, 시장 검증 전</p>
+</section>
+
+<section id="product">
+  <h2>상품 구성</h2>
+  <div class="table"><table>
+    <thead><tr><th>상품</th><th>고객이 얻는 것</th><th>판매 단위</th><th>역할</th></tr></thead>
+    <tbody>
+      <tr><td><strong>LogBook</strong></td><td>BDF·보고서 관리, 3D 뷰어, 해석 검증, 모델 비교, 검색</td><td>사용자당 연 구독</td><td>먼저 판매하는 시작 상품</td></tr>
+      <tr><td><strong>WorkBench</strong></td><td>Model Builder, GMU 권상, Truss, Mooring 등 해석 앱과 Studio 3D 뷰어</td><td>동시 사용 석당 연 구독</td><td>객단가를 높이는 확장 상품</td></tr>
+      <tr><td><strong>STP→BDF 변환</strong></td><td>3D CAD의 STP 형상을 Nastran 판·보 모델로 변환</td><td>블록 단위 유료 변환으로 시작</td><td>3D CAD 보유 고객의 도입 계기</td></tr>
+    </tbody>
+  </table></div>
+  <p>LogBook을 먼저 파는 이유는 Nastran을 쓰는 팀이라면 자료 관리 문제가 비슷할 가능성이 높기 때문입니다. WorkBench의 해석 앱은 회사별 절차에 맞춘 조정이 필요할 수 있어 두 번째 단계로 둡니다.</p>
+</section>
+
+<section id="market-price">
+  <h2>비교 시세</h2>
+  <p>동일한 공개 경쟁 제품은 찾지 못했습니다. 기능이 겹치는 제품을 기준으로 삼았으며, 원화는 $1=1,400원, €1=1,600원, ¥100=930원, 1위안=195원으로 환산한 참고값입니다.</p>
+  <div class="table"><table>
+    <thead><tr><th>시장</th><th>제품</th><th>가격</th><th>원화 환산</th><th>근거</th></tr></thead>
+    <tbody>
+      <tr><td>공통</td><td>Femap + Nastran</td><td class="n">1석 연 $10,718</td><td class="n">약 1,500만 원</td><td><span class="tag t-fact">확인</span> Siemens</td></tr>
+      <tr><td>공통</td><td>Nauticus Hull FEA 패키지</td><td class="n">연 €8,390~13,985</td><td class="n">약 1,340만~2,240만 원</td><td><span class="tag t-fact">확인</span> DNV 판매처</td></tr>
+      <tr><td>공통</td><td>Nauticus Hull 기본</td><td class="n">연 €1,755~2,925</td><td class="n">약 280만~470만 원</td><td><span class="tag t-fact">확인</span> DNV 판매처</td></tr>
+      <tr><td>일본</td><td>Femap with Nastran 기본</td><td class="n">1석 연 ¥1,678,000</td><td class="n">약 1,560만 원</td><td><span class="tag t-fact">확인</span> CAD Japan, 2026-02 세별</td></tr>
+      <tr><td>일본</td><td>Femap with Nastran 네트워크</td><td class="n">연 ¥2,386,000</td><td class="n">약 2,220만 원</td><td><span class="tag t-fact">확인</span> CAD Japan</td></tr>
+      <tr><td>일본</td><td>Femap 단독</td><td class="n">1석 연 ¥1,269,000</td><td class="n">약 1,180만 원</td><td><span class="tag t-fact">확인</span> CAD Japan</td></tr>
+      <tr><td>중국</td><td>ZW3D(3D CAD, 해석 제품 아님)</td><td class="n">연 약 1.7만 위안</td><td class="n">약 330만 원</td><td><span class="tag t-weak">참고</span> 현지 글, 영구 약 4.2만 위안</td></tr>
+      <tr><td>공통</td><td>Teamcenter</td><td class="n">사용자당 월 $150~250</td><td class="n">연 약 250만~420만 원</td><td><span class="tag t-weak">참고</span> 집계 사이트 간 불일치</td></tr>
+      <tr><td>공통</td><td>Ansys Minerva</td><td class="n">사용자당 연 $5,000</td><td class="n">약 700만 원</td><td><span class="tag t-weak">참고</span> 출처 불명</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">한국의 구조해석 소프트웨어 표시가·낙찰가, 중국의 CAE·해석 자료관리 가격, MSC SimManager·MAESTRO·SESAM의 가격은 신뢰할 자료를 찾지 못했습니다.</p>
+</section>
+
+<section id="pricing">
+  <h2>나라별 가격안 <span class="tag t-hyp">가설</span></h2>
+  <p>한국은 Femap 대비 사용자 도구로 포지셔닝했고, 일본은 Femap 가격에 같은 비율을 적용했습니다. 중국은 현지 소프트웨어 가격 수준과 파트너 몫을 고려해 한국의 약 45%로 잡았습니다. 부서 패키지는 20% 할인 기준입니다.</p>
+  <div class="table"><table>
+    <thead><tr><th>구분</th><th>한국</th><th>일본</th><th>중국</th></tr></thead>
+    <tbody>
+      <tr><td>LogBook 사용자당 연</td><td class="n">150만 원</td><td class="n">16만 엔</td><td class="n">0.35만 위안</td></tr>
+      <tr><td>WorkBench 1석 연</td><td class="n">400만 원</td><td class="n">45만 엔</td><td class="n">0.9만 위안</td></tr>
+      <tr><td><strong>팀 패키지</strong><br><span class="note">LogBook 5명 + WorkBench 3석</span></td><td class="n"><strong>1,950만 원</strong></td><td class="n"><strong>215만 엔</strong><br>약 2,000만 원</td><td class="n"><strong>4.45만 위안</strong><br>약 870만 원</td></tr>
+      <tr><td><strong>부서 패키지</strong><br><span class="note">LogBook 15명 + WorkBench 6석</span></td><td class="n"><strong>3,720만 원</strong></td><td class="n"><strong>408만 엔</strong><br>약 3,790만 원</td><td class="n"><strong>8.52만 위안</strong><br>약 1,660만 원</td></tr>
+      <tr><td>팀 도입비(첫해 1회)</td><td class="n">약 600만~1,000만 원</td><td class="n">약 65만~110만 엔</td><td class="n">약 1.3만~2.2만 위안</td></tr>
+      <tr><td>부서 도입비(첫해 1회)</td><td class="n">약 1,100만~1,900만 원</td><td class="n">약 120만~200만 엔</td><td class="n">약 2.6만~4.3만 위안</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">도입비는 설치, 기존 자료 이전, 교육 비용으로 연 구독의 30~50%입니다. 세금과 파트너 수수료는 포함하지 않았습니다.</p>
+</section>
+
+<section id="countries">
+  <h2>3개국 시장 비교</h2>
+  <div class="table"><table>
+    <thead><tr><th>항목</th><th>한국</th><th>일본</th><th>중국</th></tr></thead>
+    <tbody>
+      <tr><td>확인된 규모</td><td>중소 조선소 수는 미확인. 수출입은행 기준 중형은 길이 100m 이상, 1만dwt급 이상</td><td>조선 사업자 약 900곳, 종사자 약 7만 명</td><td>2025년 건조량 세계 56.1%, 수주 69.0%. 중소 조선소 수는 미확인</td></tr>
+      <tr><td>지원 제도</td><td>중소조선 스마트 생산혁신 지원, 경남 15억 원 규모·8개사 선정 사례</td><td>조선 DX 보조, 사업비 1/2 이내·상한 3,000만 엔 사례</td><td>대상 제도 미확인</td></tr>
+      <tr><td>구매 동기</td><td>협력사와 3D 설계 정보 공유, 생산 디지털화</td><td>인력 부족, 구조강도 해석 자동화 과제가 채택된 사례 있음</td><td>높은 수주량. 중소 업체 수요는 미확인</td></tr>
+      <tr><td>예상 장애</td><td>시장이 좁고 레퍼런스 확보가 관건</td><td>일본어 지원, 현지 대리점, 사업 신뢰도</td><td>현지 소프트웨어 경쟁, 낮은 가격, 영업·지원·결제 구조</td></tr>
+      <tr><td><strong>판단</strong></td><td><strong>1순위 시작 시장</strong></td><td><strong>2순위 확장 시장</strong></td><td><strong>파트너 전까지 보류</strong></td></tr>
+    </tbody>
+  </table></div>
+  <p>일본은 Femap 가격이 공개되어 있고 보조금 사례도 있어 가격 근거가 가장 분명합니다. 다만 보조금은 기술개발·실증 사업 사례이며, 일반 소프트웨어 구매에 쓸 수 있는지는 확인이 필요합니다.</p>
+</section>
+
+<section id="cad">
+  <h2>3D CAD 전제 검증</h2>
+  <div class="callout"><strong>“모든 업체가 3D CAD를 쓴다”는 전제는 아직 확인되지 않았습니다.</strong> 나라별 중소 조선소의 3D 도입률 자료를 찾지 못했습니다. 판매 전 첫 인터뷰에서 반드시 확인해야 합니다.</div>
+  <div class="table"><table>
+    <thead><tr><th>고객 유형</th><th>가정</th><th>맞는 상품</th><th>확인할 질문</th></tr></thead>
+    <tbody>
+      <tr><td>3D 모델과 자체 해석 인력 보유</td><td>가장 좋은 고객</td><td>LogBook + WorkBench + STP→BDF</td><td>어떤 CAD에서 STP를 내보내는가? 판 두께·보 정보가 남는가?</td></tr>
+      <tr><td>3D 모델은 있으나 해석은 외주</td><td>구매자가 외주사일 수 있음</td><td>STP→BDF, 해석 용역사용 LogBook</td><td>외주 비용과 기간은 얼마인가?</td></tr>
+      <tr><td>2D 도면 중심</td><td>STP 변환 효과가 작음</td><td>LogBook 또는 판매 제외</td><td>보고서와 해석 모델을 어디에 보관하는가?</td></tr>
+    </tbody>
+  </table></div>
+  <p>실제 구매자는 조선소보다 구조해석 용역사나 설계사일 수 있습니다. 첫 인터뷰 대상에 조선소와 용역사를 함께 넣어야 하는 이유입니다.</p>
+</section>
+
+<section id="revenue">
+  <h2>연 구독 매출 시나리오 <span class="tag t-hyp">가설</span></h2>
+  <p>아래는 예측이 아니라 가격안에 고객 수를 곱한 계산입니다. 도입비와 유지 비용은 포함하지 않았습니다.</p>
+  <div class="table"><table>
+    <thead><tr><th>시나리오</th><th>고객</th><th>연 구독 합계</th></tr></thead>
+    <tbody>
+      <tr><td>시작</td><td>한국 팀 3곳</td><td class="n">5,850만 원</td></tr>
+      <tr><td>기본</td><td>한국 팀 5곳 + 일본 팀 3곳</td><td class="n">약 1억 5,750만 원</td></tr>
+      <tr><td>확대</td><td>한국 팀 6곳·부서 2곳 + 일본 팀 5곳·부서 1곳</td><td class="n">약 3억 2,930만 원</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="plan">
+  <h2>90일 검증 계획</h2>
+  <ol>
+    <li><strong>1~30일:</strong> 한국 조선소·해석 용역사 담당자 5명을 인터뷰합니다. 3D CAD 사용, 해석 인력, 현재 자료 관리 방식, 연 150만 원 가격 반응을 확인합니다.</li>
+    <li><strong>31~60일:</strong> 공개 또는 자체 제작 모델로 LogBook 데모를 만들고, STP→BDF의 수작업 대비 시간을 측정합니다. 남아 있는 판·보 미연결 문제를 먼저 해결합니다.</li>
+    <li><strong>61~90일:</strong> 유료 파일럿 1곳 또는 블록 유료 변환 1건을 제안합니다. 금액을 받는 것이 중요하며, 무료 시험은 성공으로 세지 않습니다.</li>
+  </ol>
+  <p><strong>판단 기준:</strong> 90일 안에 유료 파일럿이 없으면 대상 고객이나 상품 범위를 다시 정합니다. 성공 후 일본 대리점 후보를 조사합니다.</p>
+</section>
+
+<section id="risk">
+  <h2>위험과 미확인 사항</h2>
+  <ul>
+    <li><strong>권리와 사내 승인:</strong> 외부 판매 전에 소유권, 코드와 데이터 사용 범위, 사내 승인 절차를 정리해야 합니다.</li>
+    <li><strong>시장 규모:</strong> 3개국 모두 구조해석 조직을 가진 중소 업체 수가 확인되지 않았습니다.</li>
+    <li><strong>지원 부담:</strong> 설치형 상품은 고객별 환경 대응과 교육 부담이 큽니다.</li>
+    <li><strong>검증 책임:</strong> 해석 결과가 설계 판단에 쓰이므로, 자동 변환과 검증의 책임 범위를 계약에 명시해야 합니다.</li>
+    <li><strong>제품 품질:</strong> 사내 환경 밖에서 설치, 업데이트, 언어 지원이 되는지 검증이 필요합니다.</li>
+    <li><strong>중국:</strong> 소프트웨어 판매 규제, 데이터 이전, 현지 경쟁 제품은 이번 조사에서 확인하지 못했습니다.</li>
+  </ul>
+</section>
+
+<section id="sources" class="src">
+  <h2>출처</h2>
+  <ul>
+    <li><a href="https://www.siemens.com/en-us/products/simcenter/mechanical-simulation/femap/femap-nastran/">Siemens Simcenter Femap/NASTRAN</a></li>
+    <li><a href="https://www.cadjapan.com/products/items/femap_with_nxnastran/price.html">CAD Japan Femap with Nastran 가격</a></li>
+    <li><a href="https://store.veracity.com/nauticus-hull">DNV Nauticus Hull 판매 페이지</a></li>
+    <li><a href="https://baijiahao.baidu.com/s?id=1779625113787559718">ZW3D 가격 안내 글</a></li>
+    <li><a href="https://www.g2.com/products/teamcenter/pricing">Teamcenter 가격(G2)</a></li>
+    <li><a href="https://github.com/haoming-luo/Awesome-Simulation-Process-Management">Awesome Simulation Process Management</a></li>
+    <li><a href="https://www.jpmac.or.jp/file/1773288914694.pdf">일본조선공업회 자료, 2026-03</a></li>
+    <li><a href="https://www.meti.go.jp/press/2024/12/20241227006/20241227006-10.pdf">일본 경제산업성 선박 참고자료</a></li>
+    <li><a href="https://www.mlit.go.jp/report/press/kaiji05_hh_000252.html">일본 국토교통성 조선 DX 지원 발표</a></li>
+    <li><a href="https://www.mirasapo.jp/subsidy/56226">조선업 DX 기술개발·실증 사업 안내</a></li>
+    <li><a href="https://www.mtnews.net/news/articleView.html?idxno=21631">경남도 중소조선 스마트생산혁신지원사업 기사</a></li>
+    <li><a href="https://www.rims.re.kr/bbs/board.php?bo_table=m0701&amp;wr_id=341&amp;page=2&amp;device=mobile">중소조선연구원 조선산업 DX 발표</a></li>
+    <li><a href="https://www.kyungnam.ac.kr/sites/riim/down/03_05_77/16.pdf">국내 중형·중소조선 산업생태계 연구</a></li>
+    <li><a href="https://www.news.cn/photo/20260202/95b3266fb9484913a9ed1f0b4d89e2b0/c.html">신화망 2025년 중국 조선 점유율</a></li>
+    <li><a href="https://www.napa.fi/software-and-services/ship-design/structural-design/">NAPA Structural Design</a></li>
+  </ul>
+</section>
+</main>
+
+<footer>내부 검토용 초안입니다. 시세는 조사 시점 기준이며, 가격안과 매출 시나리오는 시장 검증 전 가설입니다.</footer>
+</div>
+</body>
+</html>
